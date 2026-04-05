@@ -1275,12 +1275,12 @@ function autododge() {
 
             if(now - dodgeStart < dodgeDuration * 1000) {
                 dodging = true;
-                const angle = Math.atan2(finalDodge.dirX, finalDodge.dirY);
+                //const angle = Math.atan2(finalDodge.dirX, finalDodge.dirY);
                 joystick.add(0x9d0).writeFloat(
-                    centerX + Math.cos(angle * Math.PI / 180) * 120.0
+                    centerX + finalDodge.dirX * 120.0
                 );
                 joystick.add(0x9d4).writeFloat(
-                    centerY + Math.sin(angle * Math.PI / 180) * 120.0
+                    centerY + finalDodge.dirY * 120.0
                 );
 
                 //set active
