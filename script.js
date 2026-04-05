@@ -1246,7 +1246,11 @@ function autododge() {
         onEnter: function(args) {
             if(!state.autododge) return;
             if(ownCharacter.isNull()) return;
-            wasJoystickActive = joystick.add(0xee8).readU8() === 1;
+            if(joystick.add(0xee8).readU8() === 1) {
+                wasJoystickActive = true;
+            }else {
+                wasJoystickActive = false;
+            }
 
             const now = Date.now();
 
@@ -1293,7 +1297,11 @@ function autododge() {
 
                 finalDodge = null;
                 //deactivate
-                joystick.add(0xee8).writeU8(wasJoystickActive ? 1 : 0);
+                if(wasJoystickActive) {
+                    joystick.add(0xee8).writeU8(1);
+                }else {
+                    joystick.add(0xee8).writeU8(0);
+                }
             }
         }
     });
