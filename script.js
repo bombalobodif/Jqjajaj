@@ -1119,6 +1119,7 @@ const setting = {
 };
 
 const bullets = new Map();
+let isDodging = false;
 
 function handleBullets(objects, count, myTeamId) {
     const now = Date.now();
@@ -1129,7 +1130,7 @@ function handleBullets(objects, count, myTeamId) {
         const index = globalId % 1000000;
 
         //bullet
-        if(type != 2) return;
+        if(type != 2) continue;
         const teamId = objPtr.add(64).readU32();
         const x = natives.LogicGameObjectClient_getX(objPtr);
         const y = natives.LogicGameObjectClient_getY(objPtr);
@@ -1137,7 +1138,7 @@ function handleBullets(objects, count, myTeamId) {
         const speed = natives.LogicProjectileData_getSpeed(dataPtr);
         const radius = natives.LogicProjectileData_getRadius(dataPtr);
 
-        if(teamId == myTeamId) return;
+        if(teamId == myTeamId) continue;
 
         const prev = bullets.get(id) || {};
 
@@ -1168,7 +1169,7 @@ function handleBullets(objects, count, myTeamId) {
     for (const id of bullets.keys()) {
         const bullet = bullets.get(id);
         if (now - bullet.lastSeen > 1000) {
-            projectiles.delete(id);
+            bullets.delete(id);
         }
     }
 }
@@ -1193,10 +1194,6 @@ function autododge() {
             const count = objMgr.add(12).readU32();
             if (!objects || objects.isNull() || count === 0 || count > 1000) return;
             handleBullets(objects, count, ownTeamId);
-
-            if(!joystickGlobal.isNull()) {
-                joystickGlobal.add(0xee8).writeU8(0);
-            }
         }
     });
 
@@ -1204,8 +1201,14 @@ function autododge() {
         onEnter: function(args) {
             if(!state.autododge) return;
             const now = Date.now();
-
             const joystick = args[0];
+
+            if(isDodging) {
+                isDodging = false;
+                joystick.add(0xee8).writeU8(0);
+            }
+
+            //const joystick = args[0];
             joystickGlobal = joystick;
 
             const centerX = joystick.add(0x9d8).readFloat();
@@ -1226,10 +1229,10 @@ function autododge() {
                 let needsToDodge = false;
                 let bestDodgeDir = { x: 0, y: 0 };
 
-                for (const projectile of projectiles.values()) {
-                    if (willCollide(projectile, myX, myY, myRadius)) {
+                for (const bullet of bullets.values()) {
+                    if (willCollide(bullet, myX, myY, myRadius)) {
                         needsToDodge = true;
-                        bestDodgeDir = getDodgeDirection(projectile, myX, myY);
+                        bestDodgeDir = getDodgeDirection(bullet, myX, myY);
                         break;
                     }
                 }
@@ -1237,7 +1240,7 @@ function autododge() {
                 if (needsToDodge) {
                     lastDodgeTime = now;
 
-                    const angle = Math.atan2(bestDodgeDir.y, bestDodgeDir.x) * 180 / Math.PI;
+                    const angle = Math.atan2(bestDodgeDir.y, bestDodgeDir.x);
 
                     joystick.add(0x9d0).writeFloat(
                         centerX + Math.cos(angle * Math.PI / 180) * 120.0
@@ -1245,6 +1248,7 @@ function autododge() {
                     joystick.add(0x9d4).writeFloat(
                         centerY + Math.sin(angle * Math.PI / 180) * 120.0
                     );
+isDodging = true;
                     joystick.add(0xee8).writeU8(1);
                 }
             }
