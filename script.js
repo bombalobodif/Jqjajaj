@@ -1269,6 +1269,7 @@ function autododge() {
             if(!finalDodge) return;
             if (!dodging) {
                 dodgeDuration = finalDodge.duration;
+                log(finalDodge.duration.toString());
                 dodgeStart = now;
             }           
 
