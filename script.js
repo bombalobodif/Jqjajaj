@@ -998,6 +998,8 @@ function getRandomSpraySlot() {
     return Math.floor(Math.random() * 5) + 6;
 }
 
+let mapData = null;
+
 function MapData() {
     Interceptor.attach(base.add(OFFSETS.tileBasedRaycast), {
         onEnter: function(args) {
@@ -1009,29 +1011,32 @@ function MapData() {
     });
     Interceptor.attach(base.add(OFFSETS.logicTileMapUpdate), {
         onEnter: function(args) {
-            const mapData = args[1]
+            mapData = args[1]
             const width  = mapData.add(0xc4).readInt();
             const height = mapData.add(0xc8).readInt();
             const tileCount = mapData.add(0xdc).readInt();
             const tilesArrayPtr = mapData.add(0x20).readPointer();
 
-            for (let i = 0; i < tileCount; i++) {
-                const tilePtr = tilesArrayPtr.add(i * 8).readPointer();
-            
-                if (tilePtr.isNull()) continue;
-            
-                // flagy
-                const isDestructible  = tilePtr.add(0x4a).readU8();
-                const blocksProj      = tilePtr.add(0x49).readU8();
-                const blocksMovement  = tilePtr.add(0x48).readU8();
-                const isOpen          = tilePtr.add(0x78).readU8();
-                const respawnTimer    = tilePtr.add(0x34).readFloat();
-            
-                // souřadnice z indexu
-                const tileX = i % width;
-                const tileY = Math.floor(i / width);
+            /*/
+            for (let ty = 0; ty < height; ty++) {
+                for (let tx = 0; tx < width; tx++) {
+                    const tilePtr = tilesArrayPtr.add((tx + width * ty) * 8).readPointer();
 
+                    if (tilePtr.isNull()) {
+                        continue;
+                    }
+
+                    const isWall = tilePtr.add(0x56).readU8() & 1;
+                    const isSolid = tilePtr.add(0x57).readU8() & 1;
+                    const hasCollision = tilePtr.add(0x53).readU8() & 1;
+                    const isDestructible = tilePtr.add(0x4a).readU8();
+                    const blocksProj = tilePtr.add(0x49).readU8();
+                    const blocksMovement = tilePtr.add(0x48).readU8();
+                    const isOpen = tilePtr.add(0x78).readU8();
+                    const respawnTimer = tilePtr.add(0x34).readFloat();
+                }
             }
+            /*/
         }
     });
 }
@@ -1109,6 +1114,7 @@ function Spinner() {
 
 const bullets = new Map();
 const movementSpeed = 720;
+const rayCastMaxDistance = 30;
 
 let wasJoystickActive = false;
 
@@ -1219,6 +1225,55 @@ function handleBullets(objects, count, myTeamId) {
     }
 }
 
+function worldToTile(worldCoord) {
+    return Math.floor(worldCoord / 300);
+}
+
+function tileToWorld(tileCoord) {
+    return tileCoord * 300 + 150;
+}
+
+function raycast(x, y, x2, y2, maxDistance) {
+    const width = mapData.add(0xc4).readInt();
+    const height = mapData.add(0xc8).readInt();
+    const tilesArrayPtr = mapData.add(0x20).readPointer();
+
+    const dx = x2 - x;
+    const dy = y2 - y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist > maxDistance) return false;
+
+    const stepCount = Math.ceil(dist);
+    const stepX = dx / stepCount;
+    const stepY = dy / stepCount;
+
+    for (let i = 1; i < stepCount; i++) {
+        const cx = x + stepX * i;
+        const cy = y + stepY * i;
+
+        const tx = Math.floor(cx);
+        const ty = Math.floor(cy);
+
+        if (tx < 0 || ty < 0 || tx >= width || ty >= height) return false;
+
+        const tilePtr = tilesArrayPtr.add((tx + width * ty) * 8).readPointer();
+
+        if (tilePtr.isNull()) continue;
+
+        const blocksMovement = tilePtr.add(0x48).readU8();
+        const blocksProj = tilePtr.add(0x49).readU8();
+        const isDestructible = tilePtr.add(0x4a).readU8();
+        const respawnTimer = tilePtr.add(0x34).readFloat();
+
+        if (blocksProj && (!isDestructible || respawnTimer > 0)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 function autododge() {
     Interceptor.attach(base.add(OFFSETS.LogicBattleModeClient_update), {
         onEnter: function(args) {
@@ -1254,8 +1309,6 @@ function autododge() {
             }
 
             const now = Date.now();
-
-            //const joystick = args[0];
         
             const centerX = joystick.add(0x9d8).readFloat();
             const centerY = joystick.add(0x9dc).readFloat();
@@ -1266,7 +1319,18 @@ function autododge() {
             const myX = natives.LogicGameObjectClient_getX(ownCharacter);
             const myY = natives.LogicGameObjectClient_getY(ownCharacter);
 
+            const tileMyX = worldToTile(myX);
+            const tileMyY = worldToTile(myY);
+
             for (const bullet of bullets.values()) {
+                const tileBulletX = worldToTile(bullet.x);
+                const tileBulletY = worldToTile(bullet.y);
+
+                const wontColide = raycast(tileMyX, tileMyY, tileBulletX, tileBulletY, rayCastMaxDistance);
+                if(!wontColide) {
+                    //colided with wall. cant hit us
+                    continue;
+                }
                 const  dodge = calculateDodge(bullet, myX, myY, myRadius, movementSpeed);
                 if(dodge != null) {
                     finalDodge = dodge;
