@@ -1203,11 +1203,6 @@ function autododge() {
             const now = Date.now();
             const joystick = args[0];
 
-            if(isDodging) {
-                isDodging = false;
-                joystick.add(0xee8).writeU8(0);
-            }
-
             //const joystick = args[0];
             joystickGlobal = joystick;
 
@@ -1223,6 +1218,10 @@ function autododge() {
             const myRadius = natives.LogicCharacterData_getCollisionRadius(data);
 
             if (now - lastDodgeTime > setting.DODGE_COOLDOWN) {
+                if(isDodging) {
+                    isDodging = false;
+                    joystick.add(0xee8).writeU8(0);
+                }
                 const myX = natives.LogicGameObjectClient_getX(ownCharacter);
                 const myY = natives.LogicGameObjectClient_getY(ownCharacter);
 
