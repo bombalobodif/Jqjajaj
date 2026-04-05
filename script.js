@@ -1246,6 +1246,7 @@ function autododge() {
         onEnter: function(args) {
             if(!state.autododge) return;
             if(ownCharacter.isNull()) return;
+            const joystick = args[0];
             if(joystick.add(0xee8).readU8() === 1) {
                 wasJoystickActive = true;
             }else {
@@ -1254,7 +1255,7 @@ function autododge() {
 
             const now = Date.now();
 
-            const joystick = args[0];
+            //const joystick = args[0];
         
             const centerX = joystick.add(0x9d8).readFloat();
             const centerY = joystick.add(0x9dc).readFloat();
