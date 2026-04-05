@@ -1287,6 +1287,8 @@ function autododge() {
                 joystick.add(0xee8).writeU8(1);
             }else {
                 dodging = false;
+
+                finalDodge = null;
                 //deactivate
                 joystick.add(0xee8).writeU8(0);
             }
