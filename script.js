@@ -1248,7 +1248,7 @@ function autododge() {
                     joystick.add(0x9d4).writeFloat(
                         centerY + Math.sin(angle * Math.PI / 180) * 120.0
                     );
-isDodging = true;
+                    isDodging = true;
                     joystick.add(0xee8).writeU8(1);
                 }
             }
