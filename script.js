@@ -1110,6 +1110,8 @@ function Spinner() {
 const bullets = new Map();
 const movementSpeed = 720;
 
+let wasJoystickActive = false;
+
 let finalDodge = null;
 let dodgeStart = 0;
 let dodgeDuration = 0;
@@ -1244,6 +1246,7 @@ function autododge() {
         onEnter: function(args) {
             if(!state.autododge) return;
             if(ownCharacter.isNull()) return;
+            wasJoystickActive = joystick.add(0xee8).readU8() === 1;
 
             const now = Date.now();
 
@@ -1290,7 +1293,7 @@ function autododge() {
 
                 finalDodge = null;
                 //deactivate
-                joystick.add(0xee8).writeU8(0);
+                joystick.add(0xee8).writeU8(wasJoystickActive ? 1 : 0);
             }
         }
     });
