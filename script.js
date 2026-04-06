@@ -693,8 +693,8 @@ function objectHandler(objects, count, myTeamId) {
         const type = Math.floor(globalId / 1000000);
         const index = globalId % 1000000;
 
-        //someName = "type: " + type.toString() + " index: " + index.toString();
-        //log(someName);
+        someName = "type: " + type.toString() + " index: " + index.toString();
+        log(someName);
         
         //is player
         if(type === 1) {
