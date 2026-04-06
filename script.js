@@ -387,7 +387,8 @@ const OFFSETS = {
     decoratedTextFieldSetupPlayerNameText: 0x570B68,
     guiFormatPlayerName: 0x579518,
     logicTileMapUpdate: 0x981A40,
-    handleJoystick: 0x7BD124
+    handleJoystick: 0x7BD124,
+    combatHudPrepareIntro: 0x5C31C4
 };
 
 const natives = {
