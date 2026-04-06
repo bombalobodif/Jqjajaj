@@ -711,25 +711,9 @@ function objectHandler(objects, count, myTeamId) {
             const teamId = objPtr.add(0xc);
             const playerDisplayData = objPtr.add(0xdc);
             const brawlerArrayPtr = objPtr.add(0x30).readPointer();
-            if(brawlerArrayPtr.isNull()) {
-                log("brawler array is null");
-                continue;
-            }
             const activeBrawlerIndex = objPtr.add(0x40).readInt();
-            if(activeBrawlerIndex.isNull()) {
-                log("active Brawler Index is null");
-                continue;
-            }
             const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
-            if(activeBrawler.isNull()) {
-                log("active brawler is null");
-                continue;
-            }
             const activeBrawlerId = activeBrawler.readInt();
-            if(activeBrawlerId.isNull()) {
-                log("active brawler id is null");
-                continue;
-            }
             log(activeBrawlerId.toString());
 
             const maxHP = objPtr.add(0xac).readS32();
