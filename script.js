@@ -709,31 +709,25 @@ function objectHandler(objects, count, myTeamId) {
             }
             /*/
             //someName = ;
-            try {
-                const brawlerArrayPtr = objPtr.add(0x30).readPointer();
-                if (brawlerArrayPtr.isNull()) {
-                    log("brawler array is null");
-                    continue;
-                }
-
-                const activeBrawlerIndex = objPtr.add(0x40).readS32();
-                if (activeBrawlerIndex < 0 || activeBrawlerIndex > 100) {
-                    log("invalid index: " + activeBrawlerIndex);
-                    continue;
-                }
-
-                const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
-                if (activeBrawler.isNull()) {
-                    log("active brawler is null");
-                    continue;
-                }
-
-                const activeBrawlerId = activeBrawler.readS32();
-                log("brawler id: " + activeBrawlerId.toString());
-
-            } catch(e) {
-                log("error reading brawler");
+            const brawlerArrayPtr = objPtr.add(0x30).readPointer();
+            if (brawlerArrayPtr.isNull()) {
+                log("brawler array is null");
+                continue;
             }
+            const activeBrawlerIndex = objPtr.add(0x40).readS32();
+            if (activeBrawlerIndex < 0 || activeBrawlerIndex > 100) {
+                log("invalid index: " + activeBrawlerIndex);
+                continue;
+            }
+
+            const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
+            if (activeBrawler.isNull()) {
+                log("active brawler is null");
+                continue;
+            }
+
+            const activeBrawlerId = activeBrawler.readS32();
+            log("brawler id: " + activeBrawlerId.toString());
             const teamId = objPtr.add(0xc);
             const playerDisplayData = objPtr.add(0xdc);
             const maxHP = objPtr.add(0xac).readS32();
