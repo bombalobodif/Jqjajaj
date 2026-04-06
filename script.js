@@ -1242,7 +1242,7 @@ function raycast(x, y, x2, y2, maxDistance) {
     const dy = y2 - y;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    if (dist > maxDistance) return false;
+    if (dist > maxDistance) return true;
 
     const stepCount = Math.ceil(dist);
     const stepX = dx / stepCount;
