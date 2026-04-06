@@ -774,7 +774,9 @@ function dodge() {
                 if (!objects || objects.isNull() || count === 0 || count > 1000) return;
                 objectHandler(objects, count, ownTeamId);
                 log(count.toString());
-            } catch (e) {}
+            } catch (e) {
+                log("error" + e.message)
+            }
         }
     });
 
