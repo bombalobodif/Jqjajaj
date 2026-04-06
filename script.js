@@ -709,12 +709,12 @@ function objectHandler(objects, count, myTeamId) {
             }
             /*/
             //someName = ;
-            const activeBrawlerIndex = readInt(objPtr.add(0x40));
-            const deck = readPtr(objPtr.add(0x30));
+            const activeBrawlerIndex = objPtr.add(0x40).readS32();
+            const deck = objPtr.add(0x30).readPointer();
         
             if (deck.isNull()) continue;
 
-            const activeBrawler = readPtr(deck.add(activeBrawlerIndex * 8));
+            const activeBrawler = deck.add(activeBrawlerIndex * 8).readPointer();
             log("passed finaly")
             //if (activeBrawler.isNull()) {
                 //log("active brawler is null");
