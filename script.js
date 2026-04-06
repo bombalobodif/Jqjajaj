@@ -693,8 +693,8 @@ function objectHandler(objects, count, myTeamId) {
         const type = Math.floor(globalId / 1000000);
         const index = globalId % 1000000;
 
-        someName = "type: " + type.toString() + " index: " + index.toString();
-        log(someName);
+        //someName = "type: " + type.toString() + " index: " + index.toString();
+        //log(someName);
         
         //is player
         if(type === 1) {
@@ -709,21 +709,13 @@ function objectHandler(objects, count, myTeamId) {
             }
             /*/
             //someName = ;
-            const brawlerArrayPtr = objPtr.add(0x30).readPointer();
-            log("passed 1");
-            if (brawlerArrayPtr.isNull()) {
-                log("brawler array is null");
-                continue;
-            }
-            const activeBrawlerIndex = objPtr.add(0x40).readS32();
-            log("passed 2" + activeBrawlerIndex.toString());
-            if (activeBrawlerIndex < 0 || activeBrawlerIndex > 100) {
-                log("invalid index: " + activeBrawlerIndex);
-                continue;
-            }
+            const activeBrawlerIndex = readInt(objPtr.add(0x40));
+            const deck = readPtr(objPtr.add(0x30));
+        
+            if (deck.isNull()) continue;
 
-            //const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
-            log("passed 3");
+            const activeBrawler = readPtr(deck.add(activeBrawlerIndex * 8));
+            log("passed finaly")
             //if (activeBrawler.isNull()) {
                 //log("active brawler is null");
                 //continue;
