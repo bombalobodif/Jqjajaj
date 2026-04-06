@@ -1,6 +1,3 @@
-let logMessages = [];
-let globalMenu = null;
-
 function log(message) {
     if (globalMenu) globalMenu.log(message);
 }
@@ -157,7 +154,7 @@ class Menu {
 
         const slp = cl.LinearLayout_LayoutParams.$new(this.#MATCH, dp(activity, 260));
         this.#logScrollView.setLayoutParams(slp);
-        
+
         this.#logScrollView.setLayoutParams(slp);
         this.#logScrollView.setBackground(makeRoundedDrawable(cl, "#0D0A1A", 16, activity));
         const sp = dp(activity, 10);
@@ -169,7 +166,7 @@ class Menu {
         const tvLp = cl.LinearLayout_LayoutParams.$new(this.#MATCH, this.#MATCH);
         this.#logTextView.setLayoutParams(tvLp);
         this.#logTextView.setMinHeight(dp(activity, 200));
-        
+
         this.#logTextView.setTextColor(cl.Color.parseColor("#AAFFAA"));
         this.#logTextView.setTextSize(13);
         this.#logScrollView.addView(this.#logTextView);
@@ -302,7 +299,7 @@ class Menu {
         if (logMessages.length > MAX_LOG_MESSAGES) {
             logMessages.splice(0, logMessages.length - MAX_LOG_MESSAGES);
         }
-        
+
         const tv = this.#logTextView;
         const cl = this.#cl;
         if (!tv) return;
@@ -459,14 +456,14 @@ function predictFuturePosition(timeToPredictSeconds) {
     let totalVx = 0;
     let totalVy = 0;
     let weightSum = 0;
-        
+
     for (let i = 1; i < latestX.array.length; i++) {
         const dx = latestX.array[i] - latestX.array[i - 1];
         const dy = latestY.array[i] - latestY.array[i - 1];
         const dt = timeDiffs.array[i - 1] / 1000;
-            
+
         if (dt <= 0) continue;
-            
+
         const weight = i;
         totalVx += (dx / dt) * weight;
         totalVy += (dy / dt) * weight;
@@ -522,7 +519,7 @@ function aimbot() {
             latestY.push(y);
 
             const now = Date.now();
-            
+
             if (lastTime !== 0) {
                 const diff = now - lastTime;
                 timeDiffs.push(diff);
@@ -617,9 +614,9 @@ let ownPlayerID = -67;
 
 function readStringbad(strPtr) {
     var ptr_ = ptr(strPtr);
-    
+
     var len = ptr_.add(0x4).readS32();
-    
+
     if (len <= 7) {
         // inline - data přímo na 0x08
         return ptr_.add(0x8).readUtf8String(len);
@@ -632,7 +629,7 @@ function readStringbad(strPtr) {
 
 function readString(ptr) {
     const length = ptr.add(4).readS32();
-    
+
     if (length <= 7) {
         // SSO: data jsou přímo inline na offset +8
         return ptr.add(8).readUtf8String(length);
@@ -645,10 +642,10 @@ function readString(ptr) {
 
 function readString2(ptr) {
     if (ptr.isNull()) return null;
-    
+
     let len = ptr.add(4).readInt();
     if (len <= 0 || len > 1000) return null;  // sanity check
-    
+
     let dataPtr;
     if (len > 7) {
         // dlouhý string → dereferencuj pointer na offset 0x08
@@ -657,7 +654,7 @@ function readString2(ptr) {
         // krátký string → data jsou přímo na offset 0x08
         dataPtr = ptr.add(8);
     }
-    
+
     if (dataPtr.isNull()) return null;
     return dataPtr.readUtf8String(len);
 }
@@ -666,21 +663,21 @@ function isString(ptr) {
     try {
         // null check
         if (ptr.isNull()) return false;
-        
+
         // magic value check - offset 0 musí být 0xffffffff
         const magic = ptr.readU32();
         if (magic !== 0xffffffff) return false;
-        
+
         // délka musí dávat smysl
         const length = ptr.add(4).readS32();
         if (length < 0 || length > 0x10000) return false; // rozumný limit
-        
+
         if (length > 7) {
             // heap pointer nesmí být null
             const dataPtr = ptr.add(8).readPointer();
             if (dataPtr.isNull()) return false;
         }
-        
+
         return true;
     } catch (e) {
         return false;
@@ -697,7 +694,7 @@ function objectHandler(objects, count, myTeamId) {
 
         //someName = "type: " + type.toString() + " index: " + index.toString();
         //log(someName);
-        
+
         //is player
         if(type === 1) {
             log("player index: " + index);
@@ -712,8 +709,9 @@ function objectHandler(objects, count, myTeamId) {
             /*/
             //someName = ;
             const activeBrawlerIndex = objPtr.add(0x40).readS32();
+            log(activeBrawlerIndex.toString());
             const deck = objPtr.add(0x30).readPointer();
-        
+
             if (deck.isNull()) continue;
 
             const activeBrawler = deck.add(activeBrawlerIndex * 8).readPointer();
@@ -864,30 +862,30 @@ function Joysticks() {
         onEnter: function(args) {
             if(!state.joystick) return;
             const joystick = args[0]; // param_1 = JoystickHandler*
-        
+
             // Raw joystick pozice
             const currentX = joystick.add(0x9d0).readFloat();
             const currentY = joystick.add(0x9d4).readFloat();
             const centerX  = joystick.add(0x9d8).readFloat();
             const centerY  = joystick.add(0x9dc).readFloat();
-        
+
             // Delta = jak moc je joystick odtažen od středu
             const deltaX = currentX - centerX;
             const deltaY = currentY - centerY;
 
             log("deltaX: " + deltaX.toString() + " deltaY: " + deltaY.toString());
-        
+
             // Magnitude (délka vektoru)
             const magnitude = joystick.add(0xfc0).readFloat();
-        
+
             // Rotovaný vektor (world-space)
             const worldX = joystick.add(0xfc4).readFloat();
             const worldY = joystick.add(0xfc8).readFloat();
-        
+
             // Poslední cílová pozice ve hře
             const lastMoveX = joystick.add(0xf3c).readInt();
             const lastMoveY = joystick.add(0xf40).readInt();
-        
+
             // Flagy
             const isActive  = joystick.add(0xee8).readU8();
             const wasMoving = joystick.add(0xeef).readU8();
@@ -905,17 +903,17 @@ function Spinner() {
             if(!state.spinner) return;
             const joystick = args[0];
             //joystickGlobal = joystick;
-        
+
             const centerX = joystick.add(0x9d8).readFloat();
             const centerY = joystick.add(0x9dc).readFloat();
-        
+
             joystick.add(0x9d0).writeFloat(
                 centerX + Math.cos(angles * Math.PI / 180) * 120.0
             );
             joystick.add(0x9d4).writeFloat(
                 centerY + Math.sin(angles * Math.PI / 180) * 120.0
             );
-        
+
             //set active
             joystick.add(0xee8).writeU8(1);
             angles = (angles + speed) % 360;
@@ -969,7 +967,7 @@ function calculateDodge(bullet, myX, myY, myRadius, mySpeed) {
 
     const safetyMargin = 2; 
     const distanceToMove = (totalRadius - distToPath) + safetyMargin;
-    
+
     const duration = distanceToMove / mySpeed;
 
     if (distToPath === 0) {
@@ -994,7 +992,7 @@ function handleBullets(objects, count, myTeamId) {
         const globalId = natives.LogicGameObjectClient_getGlobalID(objPtr);
         const dataPtr = natives.LogicGameObjectClient_getData(objPtr);
         if (!dataPtr || dataPtr.isNull()) continue;
-        
+
         const type = Math.floor(globalId / 1000000);
         const index = globalId % 1000000;
 
@@ -1127,7 +1125,7 @@ function autododge() {
             }
 
             const now = Date.now();
-        
+
             const centerX = joystick.add(0x9d8).readFloat();
             const centerY = joystick.add(0x9dc).readFloat();
 
