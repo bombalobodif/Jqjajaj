@@ -710,11 +710,11 @@ function objectHandler(objects, count, myTeamId) {
             //someName = ;
             const teamId = objPtr.add(0xc);
             const playerDisplayData = objPtr.add(0xdc);
-            const brawlerArrayPtr = objPtr.add(0x30).readPointer();
-            const activeBrawlerIndex = objPtr.add(0x40).readInt();
-            const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
-            const activeBrawlerId = activeBrawler.readInt();
-            log(activeBrawlerId.toString());
+            //const brawlerArrayPtr = objPtr.add(0x30).readPointer();
+            //const activeBrawlerIndex = objPtr.add(0x40).readInt();
+            //const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
+            //const activeBrawlerId = activeBrawler.readInt();
+            //log(activeBrawlerId.toString());
 
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
@@ -759,6 +759,7 @@ function dodge() {
                 const count = objMgr.add(12).readU32();
                 if (!objects || objects.isNull() || count === 0 || count > 1000) return;
                 objectHandler(objects, count, ownTeamId);
+                log(count.toString());
             } catch (e) {}
         }
     });
