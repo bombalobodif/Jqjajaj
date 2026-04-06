@@ -710,17 +710,20 @@ function objectHandler(objects, count, myTeamId) {
             /*/
             //someName = ;
             const brawlerArrayPtr = objPtr.add(0x30).readPointer();
+            log("passed 1");
             if (brawlerArrayPtr.isNull()) {
                 log("brawler array is null");
                 continue;
             }
             const activeBrawlerIndex = objPtr.add(0x40).readS32();
+            log("passed 2");
             if (activeBrawlerIndex < 0 || activeBrawlerIndex > 100) {
                 log("invalid index: " + activeBrawlerIndex);
                 continue;
             }
 
             const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
+            log("passed 3");
             if (activeBrawler.isNull()) {
                 log("active brawler is null");
                 continue;
