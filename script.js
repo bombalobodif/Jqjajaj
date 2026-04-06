@@ -845,6 +845,7 @@ function objectHandler(objects, count, myTeamId) {
         
         //is player
         if(type == 1) {
+            /*/
             const name = objPtr.add(0x220);
             if(isString(name)) {
                 const nameString = readString(name);
@@ -852,9 +853,15 @@ function objectHandler(objects, count, myTeamId) {
             }else {
                 log("doesnt have string");
             }
+            /*/
             //someName = ;
             const teamId = objPtr.add(0xc);
             const playerDisplayData = objPtr.add(0xdc);
+            const brawlerArrayPtr = objPtr.add(0x30).readPointer();
+            const activeBrawlerIndex = objPtr.add(0x40).readInt();
+            const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
+            const activeBrawlerId = activeBrawler.readInt();
+            log(activeBrawlerId.toString());
 
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
@@ -867,12 +874,23 @@ function objectHandler(objects, count, myTeamId) {
         if(type == 3) {
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
+            const brawlerArrayPtr = objPtr.add(0x30).readPointer();
+            const activeBrawlerIndex = objPtr.add(0x40).readInt();
+            const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
+            const activeBrawlerId = activeBrawler.readInt();
+            log(activeBrawlerId.toString());
+
         }
 
         //tick bombs/pirces ammo jars
         if(type == 4) {
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
+            const brawlerArrayPtr = objPtr.add(0x30).readPointer();
+            const activeBrawlerIndex = objPtr.add(0x40).readInt();
+            const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
+            const activeBrawlerId = activeBrawler.readInt();
+            log(activeBrawlerId.toString());
         }
     }
 }
