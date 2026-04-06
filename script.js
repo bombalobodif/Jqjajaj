@@ -732,7 +732,7 @@ function objectHandler(objects, count, myTeamId) {
                 log("brawler id: " + activeBrawlerId.toString());
 
             } catch(e) {
-                log("error reading brawler: " + e.message);
+                log("error reading brawler");
             }
             const teamId = objPtr.add(0xc);
             const playerDisplayData = objPtr.add(0xdc);
