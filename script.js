@@ -727,23 +727,12 @@ function objectHandler(objects, count, myTeamId) {
         if(type == 3) {
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
-            const brawlerArrayPtr = objPtr.add(0x30).readPointer();
-            const activeBrawlerIndex = objPtr.add(0x40).readInt();
-            const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
-            const activeBrawlerId = activeBrawler.readInt();
-            log(activeBrawlerId.toString());
-
         }
 
         //tick bombs/pirces ammo jars
         if(type == 4) {
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
-            const brawlerArrayPtr = objPtr.add(0x30).readPointer();
-            const activeBrawlerIndex = objPtr.add(0x40).readInt();
-            const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
-            const activeBrawlerId = activeBrawler.readInt();
-            log(activeBrawlerId.toString());
         }
     }
 }
