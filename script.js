@@ -1114,7 +1114,7 @@ function Spinner() {
 
 const bullets = new Map();
 const movementSpeed = 720;
-const rayCastMaxDistance = 30;
+const rayCastMaxDistance = 5;
 
 let wasJoystickActive = false;
 
