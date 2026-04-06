@@ -388,7 +388,8 @@ const OFFSETS = {
     guiFormatPlayerName: 0x579518,
     logicTileMapUpdate: 0x981A40,
     handleJoystick: 0x7BD124,
-    combatHudPrepareIntro: 0x5C31C4
+    combatHudPrepareIntro: 0x5C31C4,
+    introSetBrawlerVisual: 0x5C7364
 };
 
 const natives = {
