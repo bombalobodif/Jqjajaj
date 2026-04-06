@@ -697,7 +697,7 @@ function objectHandler(objects, count, myTeamId) {
         //log(someName);
         
         //is player
-        if(type == 1) {
+        if(type === 1) {
             /*/
             const name = objPtr.add(0x220);
             if(isString(name)) {
@@ -736,17 +736,17 @@ function objectHandler(objects, count, myTeamId) {
             const currentHP = objPtr.add(0xa8).readS32();
         }
         //bullet
-        if(type == 2) {
+        if(type === 2) {
         }
 
         //some entity even explosion and fire circle
-        if(type == 3) {
+        if(type === 3) {
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
         }
 
         //tick bombs/pirces ammo jars
-        if(type == 4) {
+        if(type === 4) {
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
         }
@@ -775,7 +775,7 @@ function dodge() {
                 const count = objMgr.add(12).readU32();
                 if (!objects || objects.isNull() || count === 0 || count > 1000) return;
                 objectHandler(objects, count, ownTeamId);
-                //log(count.toString());
+                log(count.toString());
             } catch (e) {}
         }
     });
