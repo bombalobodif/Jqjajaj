@@ -775,7 +775,7 @@ function dodge() {
                 const count = objMgr.add(12).readU32();
                 if (!objects || objects.isNull() || count === 0 || count > 1000) return;
                 objectHandler(objects, count, ownTeamId);
-                log(count.toString());
+                //log(count.toString());
             } catch (e) {}
         }
     });
