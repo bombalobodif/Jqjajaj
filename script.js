@@ -716,21 +716,21 @@ function objectHandler(objects, count, myTeamId) {
                 continue;
             }
             const activeBrawlerIndex = objPtr.add(0x40).readS32();
-            log("passed 2");
+            log("passed 2" + activeBrawlerIndex.toString());
             if (activeBrawlerIndex < 0 || activeBrawlerIndex > 100) {
                 log("invalid index: " + activeBrawlerIndex);
                 continue;
             }
 
-            const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
+            //const activeBrawler = brawlerArrayPtr.add(activeBrawlerIndex * 8).readPointer();
             log("passed 3");
-            if (activeBrawler.isNull()) {
-                log("active brawler is null");
-                continue;
-            }
+            //if (activeBrawler.isNull()) {
+                //log("active brawler is null");
+                //continue;
+            //}
 
-            const activeBrawlerId = activeBrawler.readS32();
-            log("brawler id: " + activeBrawlerId.toString());
+            //const activeBrawlerId = activeBrawler.readS32();
+            //log("brawler id: " + activeBrawlerId.toString());
             const teamId = objPtr.add(0xc);
             const playerDisplayData = objPtr.add(0xdc);
             const maxHP = objPtr.add(0xac).readS32();
