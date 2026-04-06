@@ -1,3 +1,6 @@
+let logMessages = [];
+let globalMenu = null;
+
 function log(message) {
     if (globalMenu) globalMenu.log(message);
 }
