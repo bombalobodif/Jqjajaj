@@ -901,7 +901,7 @@ function Spinner() {
         onEnter: function(args) {
             if(!state.spinner) return;
             const joystick = args[0];
-            joystickGlobal = joystick;
+            //joystickGlobal = joystick;
         
             const centerX = joystick.add(0x9d8).readFloat();
             const centerY = joystick.add(0x9dc).readFloat();
@@ -1191,13 +1191,13 @@ function autododge() {
 
 function main() {
     aimbot();
-    dodge();
     //ghostMode(); does nothing because server checks
     MapData();
     name();
     Joysticks();
     Spinner();
     autododge();
+    dodge();
     Java.perform(() => {
         Java.scheduleOnMainThread(() => {
             const cl = getClassLoader();
