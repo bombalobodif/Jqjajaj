@@ -1328,6 +1328,7 @@ function autododge() {
 
                 const wontColide = raycast(tileMyX, tileMyY, tileBulletX, tileBulletY, rayCastMaxDistance);
                 if(!wontColide) {
+                    log("colided");
                     //colided with wall. cant hit us
                     continue;
                 }
@@ -1341,7 +1342,7 @@ function autododge() {
             if(!finalDodge) return;
             if (!dodging) {
                 dodgeDuration = finalDodge.duration;
-                log(finalDodge.duration.toString());
+                //log(finalDodge.duration.toString());
                 dodgeStart = now;
             }           
 
