@@ -700,7 +700,7 @@ function objectHandler(objects, count, myTeamId) {
 
         //is player
         if(type === 1) {
-            log("player index: " + index);
+            //log("player index: " + index);
             /*/
             const name = objPtr.add(0x220);
             if(isString(name)) {
@@ -711,14 +711,14 @@ function objectHandler(objects, count, myTeamId) {
             }
             /*/
             //someName = ;
-            const activeBrawlerIndex = objPtr.add(0x40).readS32();
-            log(activeBrawlerIndex.toString());
-            const deck = objPtr.add(0x30).readPointer();
+            //const activeBrawlerIndex = objPtr.add(0x40).readS32();
+            //log(activeBrawlerIndex.toString());
+            //const deck = objPtr.add(0x30).readPointer();
 
-            if (deck.isNull()) continue;
+            //if (deck.isNull()) continue;
 
-            const activeBrawler = deck.add(activeBrawlerIndex * 8).readPointer();
-            log("passed finaly")
+            //const activeBrawler = deck.add(activeBrawlerIndex * 8).readPointer();
+            //log("passed finaly")
             //if (activeBrawler.isNull()) {
                 //log("active brawler is null");
                 //continue;
@@ -775,6 +775,21 @@ function dodge() {
             } catch (e) {
                 log("error" + e.message)
             }
+        }
+    });
+
+    Interceptor.attach(base.add(OFFSETS.introSetBrawlerVisual), {
+        onEnter: function(args) {
+            const player = args[1];
+        
+            const teamIndex          = player.add(0x0c).readS32();
+            const deck               = player.add(0x30).readPointer();
+            const activeBrawlerIndex = player.add(0x40).readS32();
+        
+            if (deck.isNull()) return;
+        
+            const activeBrawler = deck.add(activeBrawlerIndex * 8).readPointer();
+            log("active brawler index: " + activeBrawlerIndex.toString());
         }
     });
 
