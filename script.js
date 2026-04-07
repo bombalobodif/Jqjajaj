@@ -790,7 +790,7 @@ function dodge() {
         
             const activeBrawler = deck.add(activeBrawlerIndex * 8).readPointer();
             log("active brawler index: " + activeBrawlerIndex.toString());
-            log("active brawler id: " + activeBrawler.readPointer().toString());
+            log("active brawler id: " + activeBrawler.readPointer().readS32().toString());
         }
     });
 
