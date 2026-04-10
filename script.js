@@ -733,6 +733,8 @@ function objectHandler(objects, count, myTeamId) {
         }
         //bullet
         if(type === 2) {
+            const dataPtr = natives.LogicGameObjectClient_getData(objPtr);
+            log("bullet vtable: " + dataPtr.readPointer().toString());
         }
 
         //some entity even explosion and fire circle
@@ -771,7 +773,7 @@ function dodge() {
                 const count = objMgr.add(12).readU32();
                 if (!objects || objects.isNull() || count === 0 || count > 1000) return;
                 objectHandler(objects, count, ownTeamId);
-                log(count.toString());
+                //log(count.toString());
             } catch (e) {
                 log("error" + e.message)
             }
@@ -789,8 +791,8 @@ function dodge() {
             if (deck.isNull()) return;
         
             const activeBrawler = deck.add(activeBrawlerIndex * 8).readPointer();
-            log("active brawler index: " + activeBrawlerIndex.toString());
-            log("active brawler id: " + activeBrawler.readPointer().readS32().toString());
+            //log("active brawler index: " + activeBrawlerIndex.toString());
+            //log("active brawler id: " + activeBrawler.readPointer().readS32().toString());
         }
     });
 
