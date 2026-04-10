@@ -734,7 +734,7 @@ function objectHandler(objects, count, myTeamId) {
         //bullet
         if(type === 2) {
             const dataPtr = natives.LogicGameObjectClient_getData(objPtr);
-            const vtable = Memory.readPointer(obj);
+            const vtable = Memory.readPointer(dataPtr);
             const adress = vtable.sub(base);
             log("bullet vtable a offset: " + adress.toString());
         }
