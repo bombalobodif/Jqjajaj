@@ -735,7 +735,7 @@ function objectHandler(objects, count, myTeamId) {
         if(type === 2) {
             const dataPtr = natives.LogicGameObjectClient_getData(objPtr);
             const adress = dataPtr.readPointer().sub(base);
-            log("bullet vtable: " + adress.readPointer().toString());
+            log("bullet vtable offset: " + adress.readPointer().toString());
         }
 
         //some entity even explosion and fire circle
