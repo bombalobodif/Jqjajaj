@@ -730,7 +730,7 @@ function readBSString(strPtr) {
 }
 
 function dumpStringObject(ptr) {
-    log(hexdump(ptr, { length: 32 }).toString());
+    log(hexdump(ptr, { length: 100 }).toString());
 }
 
 let someName = "no name";
