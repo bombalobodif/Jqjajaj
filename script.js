@@ -687,6 +687,33 @@ function isString(ptr) {
     }
 }
 
+const CharacterType = {
+    0:  "Hero",
+    1:  "Npc_Boss",
+    2:  "Minion_FollowOwner",
+    3:  "Minion_FindEnemies",
+    4:  "LootBox",
+    6:  "Pvp_Base",
+    7:  "Minion_Building_charges_ulti",
+    8:  "Minion_Dog",
+    0xC: "RoboWars",
+    0xD: "Train",
+    0xF: "Minion_Mirage",
+    0x10: "Npc_Boss_TownCrush",
+    0x11: "Carryable",
+    0x12: "Minion_Duplicate",
+    0x13: "Payload",
+    0x14: "Minion_Invasion",
+    0x15: "Minion_LastStand",
+    0x16: "Minion_Percenter",
+    0x17: "Minion_Twin",
+    0x18: "Minion_Critter",
+    0x19: "Minion_Orbiting",
+    0x1A: "Hero2",
+    0x1E: "Mega_Boss",
+    0x1F: "Minion_Shadow_Clone",
+};
+
 let someName = "no name";
 function objectHandler(objects, count, myTeamId) {
     for (let i = 0; i < count; i++) {
@@ -730,13 +757,18 @@ function objectHandler(objects, count, myTeamId) {
             const playerDisplayData = objPtr.add(0xdc);
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
+
+            const dataPtr = natives.LogicGameObjectClient_getData(objPtr);
+            const characterTypeId = dataPtr.add(0x23C).readS32();
+            const typeName = CharacterType[characterTypeId] ?? "Unknown";
+            log(typeName.toString());
         }
         //bullet
         if(type === 2) {
             const dataPtr = natives.LogicGameObjectClient_getData(objPtr);
             const vtable = Memory.readPointer(dataPtr);
             const adress = vtable.sub(base);
-            log("bullet vtable a offset: " + adress.toString());
+            //log("bullet vtable a offset: " + adress.toString());
         }
 
         //some entity even explosion and fire circle
