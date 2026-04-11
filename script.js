@@ -774,8 +774,8 @@ function objectHandler(objects, count, myTeamId) {
             //log("brawler id: " + activeBrawlerId.toString());
             const teamId = objPtr.add(0xc);
             const playerDisplayData = objPtr.add(0x220);
-            const name = playerDisplayData.add(0x08).readUtf8String();
-            log("playerDisplayData name: " + name.toString());
+            //const name = playerDisplayData.add(0x08).readUtf8String();
+            //log("playerDisplayData name: " + name.toString());
 
             
             const maxHP = objPtr.add(0xac).readS32();
@@ -808,12 +808,24 @@ function objectHandler(objects, count, myTeamId) {
         if(type === 3) {
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
+
+            const dataPtr = natives.LogicGameObjectClient_getData(objPtr);
+            const vtable = Memory.readPointer(dataPtr);
+            const adress = vtable.sub(base);
+
+            log("effekt vtable: " + adress.toString());
         }
 
         //tick bombs/pirces ammo jars
         if(type === 4) {
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
+
+            const dataPtr = natives.LogicGameObjectClient_getData(objPtr);
+            const vtable = Memory.readPointer(dataPtr);
+            const adress = vtable.sub(base);
+
+            log("item vtable: " + adress.toString());
         }
     }
 }
