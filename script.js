@@ -770,6 +770,11 @@ function objectHandler(objects, count, myTeamId) {
             //log("brawler id: " + activeBrawlerId.toString());
             const teamId = objPtr.add(0xc);
             const playerDisplayData = objPtr.add(0xdc);
+            const vtable = Memory.readPointer(playerDisplayData);
+            const offset = vtable.sub(base);
+            log("playerDisplayData vtable: " + offset.toString());
+
+            
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
 
@@ -786,7 +791,7 @@ function objectHandler(objects, count, myTeamId) {
             const csvRow = dataPtr.add(0x8).readPointer();
             const strPtr = natives.CSVgetValueAt(csvRow, columnIndexItemName);
             const itemName = readBSString(strPtr);
-            log("ItemName: " + itemName.toString());
+            //log("ItemName: " + itemName.toString());
         }
         //bullet
         if(type === 2) {
