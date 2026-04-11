@@ -414,7 +414,7 @@ const natives = {
     showSpray: new NativeFunction(base.add(OFFSETS.showSpray), 'void', ['uint32']),
     showEmote: new NativeFunction(base.add(OFFSETS.showEmote), 'void', ['uint32']),
     CSVgetStringValueAt: new NativeFunction(base.add(OFFSETS.CSVgetStringValueAt),'pointer', ['pointer', 'int']),
-    CSVgetIntValueAt: new NativeFunction(base.add(OFFSETS.CSVgetIntValueAt),'pointer', ['pointer', 'int'])
+    CSVgetIntValueAt: new NativeFunction(base.add(OFFSETS.CSVgetIntValueAt),'int', ['pointer', 'int'])
 };
 
 //CONFIG
@@ -820,8 +820,8 @@ function objectHandler(objects, count, myTeamId) {
             }
 
             const csvRow = dataPtr.add(0x8).readPointer();
-            const intPtr = natives.CSVgetIntValueAt(csvRow, columnIndexRadius);
-            const radius = intPtr.readS32();
+            const intRadius = natives.CSVgetIntValueAt(csvRow, columnIndexRadius);
+            const radius = intRadius.toInt32();
 
             log("radius efektu: " + radius.toString());
         }
