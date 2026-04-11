@@ -809,11 +809,17 @@ function objectHandler(objects, count, myTeamId) {
             const maxHP = objPtr.add(0xac).readS32();
             const currentHP = objPtr.add(0xa8).readS32();
 
-            const dataPtr = natives.LogicGameObjectClient_getData(objPtr);
-            const vtable = Memory.readPointer(dataPtr);
-            const adress = vtable.sub(base);
+            const columnIndexRadius = base.add(0x10F89D4).readS32();
+            if (columnIndexRadius === -1) {
+                //tabulka není inicializovaná
+                continue;
+            }
 
-            log("effekt vtable: " + adress.toString());
+            const csvRow = dataPtr.add(0x8).readPointer();
+            const strPtr = natives.CSVgetValueAt(csvRow, columnIndexRadius);
+            const radius = readBSString(strPtr);
+
+            log("radius efektu: " + radius.toString());
         }
 
         //tick bombs/pirces ammo jars
@@ -825,7 +831,7 @@ function objectHandler(objects, count, myTeamId) {
             const vtable = Memory.readPointer(dataPtr);
             const adress = vtable.sub(base);
 
-            log("item vtable: " + adress.toString());
+            //log("item vtable: " + adress.toString());
         }
     }
 }
