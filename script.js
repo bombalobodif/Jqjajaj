@@ -770,9 +770,9 @@ function objectHandler(objects, count, myTeamId) {
             //log("brawler id: " + activeBrawlerId.toString());
             const teamId = objPtr.add(0xc);
             const playerDisplayData = objPtr.add(0xdc);
-            const vtable = Memory.readPointer(playerDisplayData);
-            const offset = vtable.sub(base);
-            log("playerDisplayData vtable: " + offset.toString());
+            const string = playerDisplayData.readPointer();
+            const name = readBSString(string);
+            log("playerDisplayData vtable: " + name.toString());
 
             
             const maxHP = objPtr.add(0xac).readS32();
