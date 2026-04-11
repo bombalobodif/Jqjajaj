@@ -390,7 +390,8 @@ const OFFSETS = {
     handleJoystick: 0x7BD124,
     combatHudPrepareIntro: 0x5C31C4,
     introSetBrawlerVisual: 0x5C7364,
-    CSVgetValueAt: 0xBE86B0
+    CSVgetStringValueAt: 0xBE86B0,
+    CSVgetIntValueAt: 0xBE86A0
 };
 
 const natives = {
@@ -412,7 +413,8 @@ const natives = {
     ClientInputManager_addInput: new NativeFunction(base.add(OFFSETS.ClientInputManager_addInput), "void", ["pointer", "pointer"]),
     showSpray: new NativeFunction(base.add(OFFSETS.showSpray), 'void', ['uint32']),
     showEmote: new NativeFunction(base.add(OFFSETS.showEmote), 'void', ['uint32']),
-    CSVgetValueAt: new NativeFunction(base.add(OFFSETS.CSVgetValueAt),'pointer', ['pointer', 'int'])
+    CSVgetStringValueAt: new NativeFunction(base.add(OFFSETS.CSVgetStringValueAt),'pointer', ['pointer', 'int']),
+    CSVgetIntValueAt: new NativeFunction(base.add(OFFSETS.CSVgetIntValueAt),'pointer', ['pointer', 'int'])
 };
 
 //CONFIG
@@ -792,7 +794,7 @@ function objectHandler(objects, count, myTeamId) {
                 continue;
             }
             const csvRow = dataPtr.add(0x8).readPointer();
-            const strPtr = natives.CSVgetValueAt(csvRow, columnIndexItemName);
+            const strPtr = natives.CSVgetStringValueAt(csvRow, columnIndexItemName);
             const itemName = readBSString(strPtr);
             //log("ItemName: " + itemName.toString());
         }
@@ -818,7 +820,7 @@ function objectHandler(objects, count, myTeamId) {
             }
 
             const csvRow = dataPtr.add(0x8).readPointer();
-            const intPtr = natives.CSVgetValueAt(csvRow, columnIndexRadius);
+            const intPtr = natives.CSVgetIntValueAt(csvRow, columnIndexRadius);
             const radius = intPtr.readS32();
 
             log("radius efektu: " + radius.toString());
