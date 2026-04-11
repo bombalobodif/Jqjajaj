@@ -779,12 +779,12 @@ function objectHandler(objects, count, myTeamId) {
             //log(typeName.toString());
 
             const columnIndexItemName = base.add(0x10F9158).readS32();
-            if (columnIndex === -1) {
+            if (columnIndexItemName === -1) {
                 //tabulka není inicializovaná
                 continue;
             }
             const csvRow = dataPtr.add(0x8).readPointer();
-            const strPtr = natives.CSVgetValueAt(csvRow, columnIndex);
+            const strPtr = natives.CSVgetValueAt(csvRow, columnIndexItemName);
             const itemName = readBSString(strPtr);
             log("ItemName: " + itemName.toString());
         }
