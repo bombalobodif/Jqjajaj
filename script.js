@@ -729,6 +729,10 @@ function readBSString(strPtr) {
     }
 }
 
+function dumpStringObject(ptr) {
+    log(hexdump(ptr, { length: 32 }).toString());
+}
+
 let someName = "no name";
 function objectHandler(objects, count, myTeamId) {
     for (let i = 0; i < count; i++) {
@@ -772,6 +776,7 @@ function objectHandler(objects, count, myTeamId) {
             const playerDisplayData = objPtr.add(0xdc);
             //const name = readBSString(playerDisplayData);
             const name = playerDisplayData.add(0x08).readUtf8String();
+            dumpStringObject(playerDisplayData);
             log("playerDisplayData vtable: " + name.toString());
 
             
@@ -873,10 +878,6 @@ function ghostMode() {
             //}
         }
     });
-}
-
-function dumpStringObject(ptr) {
-    log(hexdump(ptr, { length: 32 }).toString());
 }
 
 function name() {
