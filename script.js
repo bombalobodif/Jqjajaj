@@ -818,8 +818,8 @@ function objectHandler(objects, count, myTeamId) {
             }
 
             const csvRow = dataPtr.add(0x8).readPointer();
-            const strPtr = natives.CSVgetValueAt(csvRow, columnIndexRadius);
-            const radius = readBSString(strPtr);
+            const intPtr = natives.CSVgetValueAt(csvRow, columnIndexRadius);
+            const radius = intPtr.readS32();
 
             log("radius efektu: " + radius.toString());
         }
