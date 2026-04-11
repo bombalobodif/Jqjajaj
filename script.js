@@ -770,8 +770,7 @@ function objectHandler(objects, count, myTeamId) {
             //log("brawler id: " + activeBrawlerId.toString());
             const teamId = objPtr.add(0xc);
             const playerDisplayData = objPtr.add(0xdc);
-            const string = playerDisplayData.readPointer();
-            const name = readBSString(string);
+            const name = readBSString(playerDisplayData);
             log("playerDisplayData vtable: " + name.toString());
 
             
