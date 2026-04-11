@@ -773,11 +773,9 @@ function objectHandler(objects, count, myTeamId) {
             //const activeBrawlerId = activeBrawler.readS32();
             //log("brawler id: " + activeBrawlerId.toString());
             const teamId = objPtr.add(0xc);
-            const playerDisplayData = objPtr.add(0xdc);
-            //const name = readBSString(playerDisplayData);
-            const name = playerDisplayData.add(0x08).readUtf8String();
-            dumpStringObject(playerDisplayData);
-            log("playerDisplayData vtable: " + name.toString());
+            const playerDisplayData = objPtr.add(0x220);
+            const name = readBSString(playerDisplayData);
+            log("playerDisplayData name: " + name.toString());
 
             
             const maxHP = objPtr.add(0xac).readS32();
