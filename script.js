@@ -389,7 +389,8 @@ const OFFSETS = {
     logicTileMapUpdate: 0x981A40,
     handleJoystick: 0x7BD124,
     combatHudPrepareIntro: 0x5C31C4,
-    introSetBrawlerVisual: 0x5C7364
+    introSetBrawlerVisual: 0x5C7364,
+    CSVgetValueAt: 0xBE86B0
 };
 
 const natives = {
@@ -410,7 +411,8 @@ const natives = {
     ClientInput_constructor_int: new NativeFunction(base.add(OFFSETS.ClientInput_constructor_int), "pointer", ["pointer", "int"]),
     ClientInputManager_addInput: new NativeFunction(base.add(OFFSETS.ClientInputManager_addInput), "void", ["pointer", "pointer"]),
     showSpray: new NativeFunction(base.add(OFFSETS.showSpray), 'void', ['uint32']),
-    showEmote: new NativeFunction(base.add(OFFSETS.showEmote), 'void', ['uint32'])
+    showEmote: new NativeFunction(base.add(OFFSETS.showEmote), 'void', ['uint32']),
+    CSVgetValueAt: new NativeFunction(base.add(OFFSETS.CSVgetValueAt),'pointer', ['pointer', 'int'])
 };
 
 //CONFIG
@@ -714,6 +716,19 @@ const CharacterType = {
     0x1F: "Minion_Shadow_Clone",
 };
 
+function readBSString(strPtr) {
+    const length = strPtr.add(0x4).readS32();
+    
+    if (length > 7) {
+        // pointer na heap
+        const charPtr = strPtr.add(0x8).readPointer();
+        return charPtr.readCString();
+    } else {
+        // inline buffer přímo na +0x8
+        return strPtr.add(0x8).readCString();
+    }
+}
+
 let someName = "no name";
 function objectHandler(objects, count, myTeamId) {
     for (let i = 0; i < count; i++) {
@@ -761,7 +776,17 @@ function objectHandler(objects, count, myTeamId) {
             const dataPtr = natives.LogicGameObjectClient_getData(objPtr);
             const characterTypeId = dataPtr.add(0x23C).readS32();
             const typeName = CharacterType[characterTypeId] ?? "Unknown";
-            log(typeName.toString());
+            //log(typeName.toString());
+
+            const columnIndexItemName = base.add(0x10F9158).readS32();
+            if (columnIndex === -1) {
+                //tabulka není inicializovaná
+                continue;
+            }
+            const csvRow = dataPtr.add(0x8).readPointer();
+            const strPtr = natives.CSVgetValueAt(csvRow, columnIndex);
+            const itemName = readBSString(strPtr);
+            log("ItemName: " + itemName.toString());
         }
         //bullet
         if(type === 2) {
