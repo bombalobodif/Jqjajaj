@@ -414,7 +414,7 @@ const natives = {
     showSpray: new NativeFunction(base.add(OFFSETS.showSpray), 'void', ['uint32']),
     showEmote: new NativeFunction(base.add(OFFSETS.showEmote), 'void', ['uint32']),
     CSVgetStringValueAt: new NativeFunction(base.add(OFFSETS.CSVgetStringValueAt),'pointer', ['pointer', 'int']),
-    CSVgetIntValueAt: new NativeFunction(base.add(OFFSETS.CSVgetIntValueAt),'int', ['pointer', 'int'])
+    CSVgetIntValueAt: new NativeFunction(base.add(OFFSETS.CSVgetIntValueAt),'pointer', ['pointer', 'int'])
 };
 
 //CONFIG
