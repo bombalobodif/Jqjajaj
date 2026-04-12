@@ -938,9 +938,12 @@ function MapData() {
         onEnter: function(args) {
             mapData = args[1]
             const width  = mapData.add(0xc4).readInt();
-            const height = mapData.add(0xc8).readInt();
-            mapheight = height;
+            //const height = mapData.add(0xc8).readInt(); wrong
             const tileCount = mapData.add(0xdc).readInt();
+
+            const height = Math.floor(tileCount / width);
+            mapheight = height;
+            
             const tilesArrayPtr = mapData.add(0x20).readPointer();
 
             for (let i = 0; i < tileCount; i++) {
