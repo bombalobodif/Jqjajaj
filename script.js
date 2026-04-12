@@ -391,7 +391,8 @@ const OFFSETS = {
     combatHudPrepareIntro: 0x5C31C4,
     introSetBrawlerVisual: 0x5C7364,
     CSVgetStringValueAt: 0xBE86B0,
-    CSVgetIntValueAt: 0xBE86A0
+    CSVgetIntValueAt: 0xBE86A0,
+    getLogicTileMap: 0xB203FC //argument is object manager from battle mode client instance
 };
 
 const natives = {
@@ -414,7 +415,8 @@ const natives = {
     showSpray: new NativeFunction(base.add(OFFSETS.showSpray), 'void', ['uint32']),
     showEmote: new NativeFunction(base.add(OFFSETS.showEmote), 'void', ['uint32']),
     CSVgetStringValueAt: new NativeFunction(base.add(OFFSETS.CSVgetStringValueAt),'pointer', ['pointer', 'int']),
-    CSVgetIntValueAt: new NativeFunction(base.add(OFFSETS.CSVgetIntValueAt),'pointer', ['pointer', 'int'])
+    CSVgetIntValueAt: new NativeFunction(base.add(OFFSETS.CSVgetIntValueAt),'pointer', ['pointer', 'int']),
+    
 };
 
 //CONFIG
@@ -823,7 +825,7 @@ function objectHandler(objects, count, myTeamId) {
             const intRadius = natives.CSVgetIntValueAt(csvRow, columnIndexRadius);
             const radius = intRadius.toInt32();
 
-            log("radius efektu: " + radius.toString());
+            //log("radius efektu: " + radius.toString());
         }
 
         //tick bombs/pirces ammo jars
@@ -836,6 +838,32 @@ function objectHandler(objects, count, myTeamId) {
             const adress = vtable.sub(base);
 
             //log("item vtable: " + adress.toString());
+        }
+    }
+}
+
+function tileMapHandler(logicTileMap) {
+    const width  = mapData.add(0xc4).readInt();
+    const height = mapData.add(0xc8).readInt();
+    const tileCount = mapData.add(0xdc).readInt();
+    const tilesArrayPtr = mapData.add(0x20).readPointer();
+
+    const columnIndexTileCode = base.add(0x11FAA88).readS32();
+    if (columnIndexTileCode === -1) return;
+
+    for (let i = 0; i < tileCount; i++) {
+        const tilePtr = tilesArrayPtr.add(i * 8).readPointer();
+        const tileDataPtr = tilePtr.readPointer();
+        const csvRow = tileDataPtr.add(0x8).readPointer();
+
+        const strPtr = natives.CSVgetStringValueAt(csvRow, columnIndexTileCode);
+        const tileCode = readBSString(strPtr);
+
+        const x = i % width;
+        const y = Math.floor(i / width);
+
+        if(forest){
+            log("tile: x: " + x.toString() + " y: " + y.toString() + " tile code: " + tileCode.toString());
         }
     }
 }
@@ -862,6 +890,9 @@ function dodge() {
                 const count = objMgr.add(12).readU32();
                 if (!objects || objects.isNull() || count === 0 || count > 1000) return;
                 objectHandler(objects, count, ownTeamId);
+
+                const logicTileMap = objMgr.add(0xf8).readPointer();
+                tileMapHandler(logicTileMap);
                 //log(count.toString());
             } catch (e) {
                 log("error" + e.message)
@@ -928,6 +959,7 @@ let mapData = null;
 function MapData() {
     Interceptor.attach(base.add(OFFSETS.tileBasedRaycast), {
         onEnter: function(args) {
+            /*/
             const mapData = args[4];
             const width  = mapData.add(0xc4).readInt();
             const height = mapData.add(0xc8).readInt();
@@ -952,6 +984,7 @@ function MapData() {
                     log("tile: x: " + x.toString() + " y: " + y.toString() + " tile code: " + tileCode.toString());
                 }
             }
+            /*/
         }
     });
     Interceptor.attach(base.add(OFFSETS.logicTileMapUpdate), {
