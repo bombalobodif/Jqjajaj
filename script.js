@@ -942,7 +942,7 @@ function MapData() {
             const tileCount = mapData.add(0xdc).readInt();
 
             const height = Math.floor(tileCount / width);
-            mapheight = height;
+            mapheight = width;
             
             const tilesArrayPtr = mapData.add(0x20).readPointer();
 
