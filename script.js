@@ -1344,7 +1344,12 @@ function main() {
             menu.addButton("test", "Test", {
                  on: () => {
                      //state.name = true;
-                     log("forest: ");
+                     if(forest) {
+                         log("found");
+                     }else {
+                         log("not found");
+                     }
+                     //log("forest: ");
                  },
                  off: () => {
                      state.name = false;
