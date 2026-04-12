@@ -948,8 +948,8 @@ function MapData() {
                 // +0x08 = původní tile typ (z mapy)
                 const originalTileDataPtr = tilePtr.add(0x8).readPointer();
 
-                const x = i % mapWidth;
-                const y = Math.floor(i / mapWidth);
+                const x = i % width;
+                const y = Math.floor(i / width);
 
                 const columnIndexTileCode = base.add(0x10FAA88).readS32();
                 if (columnIndexTileCode === -1) {
