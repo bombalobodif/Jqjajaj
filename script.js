@@ -931,9 +931,25 @@ function MapData() {
             const mapData = args[4];
             const width  = mapData.add(0xc4).readInt();
             const height = mapData.add(0xc8).readInt();
-            const tileArrayPtr = mapData.add(0x20).readPointer();
+            const tileCount = mapData.add(0xdc).readInt();
+            const tilesArrayPtr = mapData.add(0x20).readPointer();
 
-            mapheight = height;
+            const columnIndexTileCode = base.add(0x11FAA88).readS32();
+            if (columnIndexTileCode === -1) return;
+
+            for (let i = 0; i < tileCount; i++) {
+                const tilePtr = tilesArrayPtr.add(i * 8).readPointer();
+                const tileDataPtr = tilePtr.readPointer();
+                const csvRow = tileDataPtr.add(0x8).readPointer();
+
+                const strPtr = natives.CSVgetStringValueAt(csvRow, columnIndexTileCode);
+                const tileCode = readBSString(strPtr);
+
+                const x = i % width;
+                const y = Math.floor(i / width);
+
+                log("tile: x: " + x.toString() + " y: " + y.toString() + " tile code: " + tileCode.toString());
+            }
         }
     });
     Interceptor.attach(base.add(OFFSETS.logicTileMapUpdate), {
