@@ -937,15 +937,16 @@ function MapData() {
     Interceptor.attach(base.add(OFFSETS.logicTileMapUpdate), {
         onEnter: function(args) {
             mapData = args[1]
-            const width  = mapData.add(0xc4).readInt();
+            const width  = mapData.add(0xc4).readS32();
             //const height = mapData.add(0xc8).readInt(); wrong
-            const tileCount = mapData.add(0xdc).readInt();
+            const tileCount = mapData.add(0xdc).readS32();
 
             const height = Math.floor(tileCount / width);
-            mapheight = width;
+            mapheight = tileCount;
             
             const tilesArrayPtr = mapData.add(0x20).readPointer();
 
+            /*/
             for (let i = 0; i < tileCount; i++) {
                 const tilePtr = tilesArrayPtr.add(i * 8).readPointer();
                 // +0x00 = aktuální tile typ (může být změněný - zničená zeď apod.)
@@ -967,6 +968,7 @@ function MapData() {
 
                 //log("tileCode: " + TileCode.toString());
             }
+            /*/
 
             /*/
             for (let ty = 0; ty < height; ty++) {
