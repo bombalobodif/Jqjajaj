@@ -932,6 +932,8 @@ function MapData() {
             const width  = mapData.add(0xc4).readInt();
             const height = mapData.add(0xc8).readInt();
             const tileArrayPtr = mapData.add(0x20).readPointer();
+
+            mapheight = height;
         }
     });
     Interceptor.attach(base.add(OFFSETS.logicTileMapUpdate), {
@@ -942,7 +944,7 @@ function MapData() {
             const tileCount = mapData.add(0xdc).readS32();
 
             const height = Math.floor(tileCount / width);
-            mapheight = tileCount;
+            //mapheight = tileCount;
             
             const tilesArrayPtr = mapData.add(0x20).readPointer();
 
