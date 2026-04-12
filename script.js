@@ -960,9 +960,7 @@ function MapData() {
                 const strPtr = natives.CSVgetStringValueAt(csvRow, columnIndexTileCode);
                 const TileCode = readBSString(strPtr);
 
-                if(forest) {
-                    log("tileCode: " + TileCode.toString());
-                }
+                log("tileCode: " + TileCode.toString());
             }
 
             /*/
