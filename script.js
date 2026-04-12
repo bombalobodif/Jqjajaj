@@ -948,7 +948,9 @@ function MapData() {
                 const x = i % width;
                 const y = Math.floor(i / width);
 
-                log("tile: x: " + x.toString() + " y: " + y.toString() + " tile code: " + tileCode.toString());
+                if(forest){
+                    log("tile: x: " + x.toString() + " y: " + y.toString() + " tile code: " + tileCode.toString());
+                }
             }
         }
     });
@@ -1392,10 +1394,10 @@ function main() {
 
             menu.addButton("test", "Test", {
                  on: () => {
-                     log("map height: " + mapheight.toString());
+                     forest = true;
                  },
                  off: () => {
-                     //forest = false;
+                     forest = false;
                  }
             });
 
