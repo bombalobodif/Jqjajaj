@@ -941,6 +941,32 @@ function MapData() {
             const tileCount = mapData.add(0xdc).readInt();
             const tilesArrayPtr = mapData.add(0x20).readPointer();
 
+            for (let i = 0; i < tileCount; i++) {
+                const tilePtr = tilesArrayPtr.add(i * 8).readPointer();
+                // +0x00 = aktuální tile typ (může být změněný - zničená zeď apod.)
+                const tileDataPtr = tilePtr.readPointer();
+                // +0x08 = původní tile typ (z mapy)
+                const originalTileDataPtr = tilePtr.add(0x8).readPointer();
+
+                const x = i % mapWidth;
+                const y = Math.floor(i / mapWidth);
+
+                const columnIndexTileCode = base.add(0x10FAA88).readS32();
+                if (columnIndexTileCode === -1) {
+                    //tabulka není inicializovaná
+                    continue;
+                }
+                const csvRow = tileDataPtr.add(0x8).readPointer();
+                const strPtr = natives.CSVgetStringValueAt(csvRow, columnIndexTileCode);
+                const TileCode = readBSString(strPtr);
+
+                forest = false;
+                if(TileCode.toString() === "F") {
+                    forest = true;
+                }
+            }
+
+            /*/
             for (let ty = 0; ty < height; ty++) {
                 for (let tx = 0; tx < width; tx++) {
                     const tilePtr = tilesArrayPtr.add((tx + width * ty) * 8).readPointer();
@@ -976,6 +1002,7 @@ function MapData() {
                     const respawnTimer = tilePtr.add(0x34).readFloat();
                 }
             }
+            /*/
         }
     });
 }
