@@ -920,6 +920,8 @@ function getRandomSpraySlot() {
     return Math.floor(Math.random() * 5) + 6;
 }
 
+let forest = false;
+
 let mapData = null;
 
 function MapData() {
@@ -956,9 +958,10 @@ function MapData() {
                     const csvRow = dataPtr.add(0x8).readPointer();
                     const strPtr = natives.CSVgetStringValueAt(csvRow, columnIndexTileCode);
                     const TileCode = readBSString(strPtr);
+                    forest = false;
                     //log("ItemName: " + itemName.toString());
                     if(TileCode.toString() === "F") {
-                        log("found forest tile: " + TileCode.toString());
+                        forest = true;
                     }
 
                     
@@ -1340,9 +1343,12 @@ function main() {
 
             menu.addButton("test", "Test", {
                  on: () => {
-                     state.name = true;
+                     //state.name = true;
+                     log("forest: " + forest.toSring());
                  },
-                 off: () => {state.name = false;}
+                 off: () => {
+                     //state.name = false;
+                 }
             });
 
             menu.addButton("joystick", "Joystick", {
