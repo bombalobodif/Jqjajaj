@@ -1344,10 +1344,10 @@ function main() {
             menu.addButton("test", "Test", {
                  on: () => {
                      //state.name = true;
-                     log("forest: " + forest.toSring());
+                     log("forest: ");
                  },
                  off: () => {
-                     //state.name = false;
+                     state.name = false;
                  }
             });
 
