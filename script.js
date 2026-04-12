@@ -864,9 +864,7 @@ function tileMapHandler(logicTileMap) {
         const x = i % width;
         const y = Math.floor(i / width);
 
-        if(forest){
-            log("tile: x: " + x.toString() + " y: " + y.toString() + " tile code: " + tileCode.toString());
-        }
+        log("tile: x: " + x.toString() + " y: " + y.toString() + " tile code: " + tileCode.toString());
     }
 }
 
