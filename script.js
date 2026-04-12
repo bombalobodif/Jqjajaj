@@ -960,9 +960,8 @@ function MapData() {
                 const strPtr = natives.CSVgetStringValueAt(csvRow, columnIndexTileCode);
                 const TileCode = readBSString(strPtr);
 
-                forest = false;
-                if(TileCode.toString() === "F") {
-                    forest = true;
+                if(forest) {
+                    log("tileCode: " + TileCode.toString());
                 }
             }
 
@@ -1370,16 +1369,10 @@ function main() {
 
             menu.addButton("test", "Test", {
                  on: () => {
-                     //state.name = true;
-                     if(forest) {
-                         log("found");
-                     }else {
-                         log("not found");
-                     }
-                     //log("forest: ");
+                     forest = true;
                  },
                  off: () => {
-                     state.name = false;
+                     forest = false;
                  }
             });
 
