@@ -921,6 +921,7 @@ function getRandomSpraySlot() {
 }
 
 let forest = false;
+let mapheight = 0;
 
 let mapData = null;
 
@@ -938,6 +939,7 @@ function MapData() {
             mapData = args[1]
             const width  = mapData.add(0xc4).readInt();
             const height = mapData.add(0xc8).readInt();
+            mapheight = height;
             const tileCount = mapData.add(0xdc).readInt();
             const tilesArrayPtr = mapData.add(0x20).readPointer();
 
@@ -960,7 +962,7 @@ function MapData() {
                 const strPtr = natives.CSVgetStringValueAt(csvRow, columnIndexTileCode);
                 const TileCode = readBSString(strPtr);
 
-                log("tileCode: " + TileCode.toString());
+                //log("tileCode: " + TileCode.toString());
             }
 
             /*/
@@ -1367,10 +1369,10 @@ function main() {
 
             menu.addButton("test", "Test", {
                  on: () => {
-                     forest = true;
+                     log("map height: " + mapheight.toString());
                  },
                  off: () => {
-                     forest = false;
+                     //forest = false;
                  }
             });
 
