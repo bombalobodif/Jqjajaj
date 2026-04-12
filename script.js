@@ -842,6 +842,8 @@ function objectHandler(objects, count, myTeamId) {
     }
 }
 
+let forest = false;
+
 function tileMapHandler(logicTileMap) {
     const width  = mapData.add(0xc4).readInt();
     const height = mapData.add(0xc8).readInt();
@@ -951,7 +953,6 @@ function getRandomSpraySlot() {
     return Math.floor(Math.random() * 5) + 6;
 }
 
-let forest = false;
 let mapheight = 0;
 
 let mapData = null;
