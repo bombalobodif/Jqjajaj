@@ -939,7 +939,6 @@ function MapData() {
             const tileCount = mapData.add(0xdc).readInt();
             const tilesArrayPtr = mapData.add(0x20).readPointer();
 
-            /*/
             for (let ty = 0; ty < height; ty++) {
                 for (let tx = 0; tx < width; tx++) {
                     const tilePtr = tilesArrayPtr.add((tx + width * ty) * 8).readPointer();
@@ -947,6 +946,22 @@ function MapData() {
                     if (tilePtr.isNull()) {
                         continue;
                     }
+
+                    const dataPtr = natives.LogicGameObjectClient_getData(tilePtr);
+                    const columnIndexTileCode = base.add(0x10FAA88).readS32();
+                    if (columnIndexTileCode === -1) {
+                        //tabulka není inicializovaná
+                        continue;
+                    }
+                    const csvRow = dataPtr.add(0x8).readPointer();
+                    const strPtr = natives.CSVgetStringValueAt(csvRow, columnIndexTileCode);
+                    const TileCode = readBSString(strPtr);
+                    //log("ItemName: " + itemName.toString());
+                    if(TileCode.toString() === "F") {
+                        log("found forest tile: " + TileCode.toString());
+                    }
+
+                    
 
                     const isWall = tilePtr.add(0x56).readU8() & 1;
                     const isSolid = tilePtr.add(0x57).readU8() & 1;
@@ -958,7 +973,6 @@ function MapData() {
                     const respawnTimer = tilePtr.add(0x34).readFloat();
                 }
             }
-            /*/
         }
     });
 }
